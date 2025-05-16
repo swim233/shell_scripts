@@ -7,7 +7,7 @@ if [[ $? -ne 0 ]]; then
     echo -e "\033[1;31m常用软件安装失败，请检查网络或源配置。\033[0m"
     exit 1
 else
-    echo -e "\033[1;32m常用软件安装成功！\n\033[0m"
+    echo -e "\033[1;32m常用软件安装成功！\033[0m"
 fi
 echo -e "\033[1;34m是否安装lsd(y/N)\033[0m"
 read -r install_lsd
@@ -23,10 +23,10 @@ else
     echo "跳过lsd安装"
 fi
 
-echo -e "\033[1;34m是否安装omz和p10k以及部分插件(y/N)\n\033[0m"
+echo -e "\033[1;34m是否安装omz和p10k以及部分插件(y/N)\033[0m"
 read -r install_omz
 if [[ "$install_omz" == "y" || "$install_omz" == "Y" ]]; then
-    echo -e "\033[1;34m正在安装omz和p10k以及部分插件\n\033[0m"
+    echo -e "\033[1;34m正在安装omz和p10k以及部分插件\033[0m"
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
@@ -48,17 +48,43 @@ fi
 
 #TODO 修改选项
 
-echo -e "\033[1;34m是否添加lsd的alias (y/N)\n\033[0m"
+echo -e "\033[1;34m是否添加lsd的alias (y/N)\033[0m"
 read -r alias_lsd
 if [[ "$alias_lsd" == "y" || "$alias_lsd" == "Y" ]]; then
     echo 'alias ls=lsd' >> ~/.zshrc
 fi
-echo -e "\033[1;34m所有步骤执行完成 请手动运行"source ~/.zshrc"\n\033[0m"
+echo -e "\033[1;34m跳过添加lsd的alias\n\033[0m"
 
-echo -e "\033[1;34m是否添加登录时的ASCII (y/N)\n\033[0m"
+echo -e "\033[1;34m是否添加登录时的ASCII (y/N)\033[0m"
 read -r login_ascii
 if [[ "$login_ascii" == "y" || "$login_ascii" == "Y" ]]; then
-    echo 'alias ls=lsd' >> ~/.zshrc
+
+mkdir -p ~/.scripts/
+echo "MOTD_CONTENT=$(cat << 'EOF'
+
+     ██╗██╗   ██╗███████╗████████╗    ██████╗ ███╗   ███╗          ██████╗ ███████╗        ██╗
+     ██║██║   ██║██╔════╝╚══██╔══╝    ██╔══██╗████╗ ████║          ██╔══██╗██╔════╝       ██╔╝▄ ██╗▄
+     ██║██║   ██║███████╗   ██║       ██████╔╝██╔████╔██║    █████╗██████╔╝█████╗        ██╔╝  ████╗
+██   ██║██║   ██║╚════██║   ██║       ██╔══██╗██║╚██╔╝██║    ╚════╝██╔══██╗██╔══╝       ██╔╝  ▀╚██╔▀
+╚█████╔╝╚██████╔╝███████║   ██║       ██║  ██║██║ ╚═╝ ██║          ██║  ██║██║         ██╔╝     ╚═╝
+ ╚════╝  ╚═════╝ ╚══════╝   ╚═╝       ╚═╝  ╚═╝╚═╝     ╚═╝          ╚═╝  ╚═╝╚═╝         ╚═╝
+
+
+EOF
+)
+
+# 使用lolcat渲染（如果安装）
+if command -v lolcat &> /dev/null; then
+    echo -e "$MOTD_CONTENT" | lolcat
+else
+    echo -e "$MOTD_CONTENT"
 fi
+" > ~/.scripts/motd.sh
+chmod +x ~/.scripts/motd.sh
+echo "/home/$USER/.scripts/motd.sh" >> ~/.zhsrc
+
+fi
+    echo -e "\033[1;32m 跳过ASCII添加\033[0m"
+
 echo -e "\033[1;34m所有步骤执行完成 请手动运行"source ~/.zshrc"\n\033[0m"
 
