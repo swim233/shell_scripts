@@ -54,3 +54,11 @@ if [[ "$alias_lsd" == "y" || "$alias_lsd" == "Y" ]]; then
     echo 'alias ls=lsd' >> ~/.zshrc
 fi
 echo -e "\033[1;34m所有步骤执行完成 请手动运行"source ~/.zshrc"\n\033[0m"
+
+echo -e "\033[1;34m是否添加登录时的ASCII (y/N)\n\033[0m"
+read -r login_ascii
+if [[ "$login_ascii" == "y" || "$login_ascii" == "Y" ]]; then
+    echo 'alias ls=lsd' >> ~/.zshrc
+fi
+echo -e "\033[1;34m所有步骤执行完成 请手动运行"source ~/.zshrc"\n\033[0m"
+
