@@ -2,7 +2,7 @@
 echo -e "\033[1;34m正在安装常用软件\033[0m"
 sleep 1
 sudo apt update && sudo apt upgrade -y
-sudo apt install zsh neovim python3 btop lolcat vim git wget curl neofetch lolcat -y
+sudo apt install zsh neovim python3 btop lolcat vim git wget curl neofetch lolcat fzf -y
 if [[ $? -ne 0 ]]; then
     echo -e "\033[1;31m常用软件安装失败，请检查网络或源配置。\033[0m"
     exit 1
@@ -20,7 +20,7 @@ if [[ "$install_lsd" == "y" || "$install_lsd" == "Y" ]]; then
         echo -e "\033[1;32mlsd安装成功！\033[0m"
     fi
 else
-    echo "跳过lsd安装"
+    echo "\033[1;32m跳过lsd安装\033[0m"
 fi
 
 echo -e "\033[1;34m是否安装omz和p10k以及部分插件(y/N)\033[0m"
@@ -44,8 +44,6 @@ if [[ "$install_omz" == "y" || "$install_omz" == "Y" ]]; then
 else
     echo -e "\033[1;32m跳过omz安装\033[0m"
 fi
-
-#TODO 修改选项
 
 echo -e "\033[1;34m是否添加lsd的alias (y/N)\033[0m"
 read -r alias_lsd
@@ -77,8 +75,22 @@ fi
 EOF
     
     chmod +x ~/.scripts/motd.sh
-    echo "/home/$USER/.scripts/motd.sh" >> ~/.zshrc
+    sed -i '1i\/home/$USER/.scripts/motd.sh' ~/.zshrc
 else
     echo -e "\033[1;32m跳过ASCII添加\033[0m"
 fi
+
+echo -e "\033[1;34m是否修改语言为中文(y/N)\033[0m"
+read -r locals_zh
+if [[ "$locals_zh" == "y" || "$locals_zh" == "Y" ]]; then
+    sudo apt install locales-all -y
+    
+    echo "LANG=zh_CN.UTF-8
+    LC_ALL=zh_CN.UTF-8" >> ~/.zshrc
+    
+    sudo locale-gen zh_CN.UTF-8
+    sudo update-locale LANG=zh_CN.UTF-8
+else echo -e "\033[1;32m跳过语言修改\033[0m"
+fi
+
 echo -e "\033[1;34m所有步骤执行完成 请手动运行"source ~/.zshrc"\n\033[0m"
