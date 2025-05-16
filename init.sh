@@ -53,37 +53,31 @@ if [[ "$alias_lsd" == "y" || "$alias_lsd" == "Y" ]]; then
   echo 'alias ls=lsd' >>~/.zshrc
 fi
 echo -e "\033[1;34m跳过添加lsd的alias\n\033[0m"
-
 echo -e "\033[1;34m是否添加登录时的ASCII (y/N)\033[0m"
 read -r login_ascii
 if [[ "$login_ascii" == "y" || "$login_ascii" == "Y" ]]; then
   mkdir -p ~/.scripts/
-  echo "
-  #!/bin/bash
-  MOTD_CONTENT=$(
-    cat <<'EOF'
-
+  cat > ~/.scripts/motd.sh <<'EOF'
+#!/bin/bash
+MOTD_CONTENT="
      ██╗██╗   ██╗███████╗████████╗    ██████╗ ███╗   ███╗          ██████╗ ███████╗        ██╗
      ██║██║   ██║██╔════╝╚══██╔══╝    ██╔══██╗████╗ ████║          ██╔══██╗██╔════╝       ██╔╝▄ ██╗▄
      ██║██║   ██║███████╗   ██║       ██████╔╝██╔████╔██║    █████╗██████╔╝█████╗        ██╔╝  ████╗
 ██   ██║██║   ██║╚════██║   ██║       ██╔══██╗██║╚██╔╝██║    ╚════╝██╔══██╗██╔══╝       ██╔╝  ▀╚██╔▀
 ╚█████╔╝╚██████╔╝███████║   ██║       ██║  ██║██║ ╚═╝ ██║          ██║  ██║██║         ██╔╝     ╚═╝
  ╚════╝  ╚═════╝ ╚══════╝   ╚═╝       ╚═╝  ╚═╝╚═╝     ╚═╝          ╚═╝  ╚═╝╚═╝         ╚═╝
-
-
-EOF
-  )
+"
 
 if command -v lolcat &> /dev/null; then
     echo -e "$MOTD_CONTENT" | lolcat
 else
     echo -e "$MOTD_CONTENT"
 fi
-" >~/.scripts/motd.sh
+EOF
+
   chmod +x ~/.scripts/motd.sh
-  echo "/home/$USER/.scripts/motd.sh" >>~/.zhsrc
-
+  echo "/home/$USER/.scripts/motd.sh" >> ~/.zshrc
+else 
+  echo -e "\033[1;32m跳过ASCII添加\033[0m"
 fi
-echo -e "\033[1;32m跳过ASCII添加\033[0m"
-
 echo -e "\033[1;34m所有步骤执行完成 请手动运行"source ~/.zshrc"\n\033[0m"
