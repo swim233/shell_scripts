@@ -20,7 +20,7 @@ if [[ "$install_lsd" == "y" || "$install_lsd" == "Y" ]]; then
         echo -e "\033[1;32mlsd安装成功！\033[0m"
     fi
 else
-    echo "\033[1;32m跳过lsd安装\033[0m"
+    echo -e "\033[1;32m跳过lsd安装\033[0m"
 fi
 
 echo -e "\033[1;34m是否安装omz和p10k以及部分插件(y/N)\033[0m"
