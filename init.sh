@@ -1,0 +1,56 @@
+#!/bin/bash
+echo -e "\033[1;34m正在安装常用软件\033[0m"
+sleep 1
+sudo apt update && sudo apt upgrade -y
+sudo apt install zsh neovim python3 btop lolcat vim git wget curl neofetch lolcat -y
+if [[ $? -ne 0 ]]; then
+    echo -e "\033[1;31m常用软件安装失败，请检查网络或源配置。\033[0m"
+    exit 1
+else
+    echo -e "\033[1;32m常用软件安装成功！\n\033[0m"
+fi
+echo -e "\033[1;34m是否安装lsd(y/N)\033[0m"
+read -r install_lsd
+if [[ "$install_lsd" == "y" || "$install_lsd" == "Y" ]]; then
+    echo -e "\033[1;34m正在安装lsd\n\033[0m"
+    sudo apt install lsd
+    if [[ $? -ne 0 ]]; then
+        echo -e "\033[1;31m lsd 安装失败，请检查网络或源配置。\033[0m"
+    else
+        echo -e "\033[1;32m lsd安装成功！\033[0m"
+    fi
+else
+    echo "跳过lsd安装"
+fi
+
+echo -e "\033[1;34m是否安装omz和p10k以及部分插件(y/N)\n\033[0m"
+read -r install_omz
+if [[ "$install_omz" == "y" || "$install_omz" == "Y" ]]; then
+    echo -e "\033[1;34m正在安装omz和p10k以及部分插件\n\033[0m"
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
+    
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+    
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+    
+    sed -i 's/robbyrussell/powerlevel10k\/powerlevel10k/g' ~/.zshrc
+    
+    sed -i 's/(git)/(git extract zsh-autosuggestions zsh-syntax-highlighting)/g' ~/.zshrc
+    
+    
+    echo -e "\033[1;32m omz相关安装成功！\033[0m"
+    
+else
+    echo -e "\033[1;32m 跳过omz安装\033[0m"
+fi
+
+#TODO 修改选项
+
+echo -e "\033[1;34m是否添加lsd的alias (y/N)\n\033[0m"
+read -r alias_lsd
+if [[ "$alias_lsd" == "y" || "$alias_lsd" == "Y" ]]; then
+    echo 'alias ls=lsd' >> ~/.zshrc
+fi
+echo -e "\033[1;34m所有步骤执行完成 请手动运行"source ~/.zshrc"\n\033[0m"
